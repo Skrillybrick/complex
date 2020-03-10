@@ -1,0 +1,23 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t skrillybrick/complex -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true skrillybrick/complex npm run test
+
+after_success:
+  - docker build -t skrillybrick/complex-client ./client
+  - docker build -t skrillybrick/complex-nginx ./nginx
+  - docker build -t skrillybrick/complex-server ./server
+  - docker build -t skrillybrick/complex-worker ./worker
+
+  - echo "$DOCKER_PASSWORD" docker login -u "$DOCKER_USERNAME" --password-stdin
+
+  - docker push skrillybrick/complex-client
+  - docker push skrillybrick/complex-nginx
+  - docker push skrillybrick/complex-server
+  - docker push skrillybrick/complex-worker
