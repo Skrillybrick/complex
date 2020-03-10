@@ -15,7 +15,7 @@ after_success:
   - docker build -t skrillybrick/complex-server ./server
   - docker build -t skrillybrick/complex-worker ./worker
 
-  - echo "$DOCKER_PASSWORD" docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
   - docker push skrillybrick/complex-client
   - docker push skrillybrick/complex-nginx
